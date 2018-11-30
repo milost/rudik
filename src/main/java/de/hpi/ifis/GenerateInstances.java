@@ -168,5 +168,6 @@ public class GenerateInstances {
                 }
             }
         }
+        System.exit(0);
     }
 }
