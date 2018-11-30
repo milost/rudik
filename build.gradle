@@ -58,3 +58,13 @@ configurations.all {
     exclude group:"org.slf4j", module: "jcl-over-slf4j"
     exclude group:"org.slf4j", module: "jul-to-slf4j"
 }
+
+task('generate_rules', type:JavaExec) {
+    group 'RuDik'
+    description 'Generates RuDik rules'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'de.hpi.ifis.GenerateRules'
+    // arguments to pass to the application
+    //args 'appArg1'
+}

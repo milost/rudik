@@ -52,8 +52,8 @@ public class GenerateRules {
 
         System.out.println("Reading predicates from file ...");
         // Queue<String> predicates = (Queue) readFile("src/main/resources/dbpedia_predicates.txt");
-        LinkedList<String> predicates = new LinkedList<>();
-        predicates.push("http://dbpedia.org/ontology/spouse");
+        Queue<String> predicates = new LinkedList<>();
+        predicates.add("http://dbpedia.org/ontology/spouse");
         System.out.println(String.format("Read %s predicates", predicates.size()));
 
         System.out.println("StartingTrying RuDik API ...");
@@ -64,7 +64,7 @@ public class GenerateRules {
 
 
         while(!predicates.isEmpty()){
-            String predicate = predicates.pop();
+            String predicate = predicates.poll();
 
             final RudikResult result = API.discoverPositiveRules(predicate, 20, 20);
 
@@ -111,14 +111,14 @@ public class GenerateRules {
                         .append("object", "object");
                 rule.append("conclusion_triple", conclusion_triple);
 
-                rules.insertOne(rule);
+                Document exists = rules.find(new Document("hashcode", rule.get("hashcode"))).first();
+                if(exists == null){
+                    rules.insertOne(rule);
+                }
             }
             System.out.printf("%s predicates remaining", predicates.size());
         }
-
-
-
-
+        System.exit(0);
     }
 }
 
