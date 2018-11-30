@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Lists;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -306,6 +307,23 @@ public class HornRule {
     final HornRule rule = new HornRule();
     allAtoms.forEach(a -> rule.addRuleAtom(a));
     return rule;
+  }
+
+    /**
+     * Create a HornRule from a bson.Document
+     * @param rule - the bson.Document representing the rule
+     * @return the constructed HornRule object
+     */
+  public static HornRule createHornRule(Document rule) {
+    List<Document> premise_atoms = (List<Document>) rule.get("premise_triples");
+    final HornRule horn_rule = new HornRule();
+    for(Document d : premise_atoms){
+        RuleAtom atom = new RuleAtom((String) d.get("subject"),
+                (String) d.get("predicate"),
+                (String) d.get("object"));
+        horn_rule.addRuleAtom(atom);
+    }
+    return horn_rule;
   }
 
   public Set<Pair<String, String>> getCoveredExamples() {
