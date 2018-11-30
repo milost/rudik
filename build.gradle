@@ -66,5 +66,21 @@ task('generate_rules', type:JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'de.hpi.ifis.GenerateRules'
     // arguments to pass to the application
+    if ( project.hasProperty("arguments") ) {
+        args(arguments.split(','))
+    }
+}
+
+task('generate_instances', type:JavaExec) {
+    group 'RuDik'
+    description 'Generates instances of RuDik rules'
+
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'de.hpi.ifis.GenerateInstances'
+
+    if ( project.hasProperty("arguments") ) {
+        args(arguments.split(','))
+    }
+    // arguments to pass to the application
     //args 'appArg1'
 }

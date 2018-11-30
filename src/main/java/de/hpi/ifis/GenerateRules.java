@@ -46,22 +46,32 @@ public class GenerateRules {
     }
 
     public static void main(String[] args) {
+
+        String filePath = "src/main/resources/dbpedia_predicates.txt";
+        String rudik_config = "src/main/config/DbpediaConfiguration.xml";
+        if(args[0] != null){
+            filePath = args[0];
+        }
+        if (args[1] != null){
+            rudik_config = args[1];
+        }
+
         MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
         MongoDatabase database = mongoClient.getDatabase("sherlox");
         MongoCollection<Document> rules = database.getCollection("rules");
 
-        System.out.println("Reading predicates from file ...");
-        // Queue<String> predicates = (Queue) readFile("src/main/resources/dbpedia_predicates.txt");
-        Queue<String> predicates = new LinkedList<>();
-        predicates.add("http://dbpedia.org/ontology/spouse");
+        System.out.printf("Reading predicates from %s ...\n", filePath);
+        Queue<String> predicates = (Queue) readFile(filePath);
+        // Queue<String> predicates = new LinkedList<>();
+        // predicates.add("http://dbpedia.org/ontology/spouse");
         System.out.println(String.format("Read %s predicates", predicates.size()));
 
-        System.out.println("StartingTrying RuDik API ...");
-        RudikApi API = new RudikApi("src/main/config/DbpediaConfiguration.xml",
+        System.out.printf("Instantiating RuDik API with config: %s ...\n", rudik_config);
+
+        RudikApi API = new RudikApi(rudik_config,
                 5 * 60,
                 true,
                 500);
-
 
         while(!predicates.isEmpty()){
             String predicate = predicates.poll();
