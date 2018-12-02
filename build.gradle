@@ -81,6 +81,4 @@ task('generate_instances', type:JavaExec) {
     if ( project.hasProperty("arguments") ) {
         args(arguments.split(','))
     }
-    // arguments to pass to the application
-    //args 'appArg1'
 }

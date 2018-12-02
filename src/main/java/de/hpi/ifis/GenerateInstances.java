@@ -36,16 +36,23 @@ public class GenerateInstances {
     }
 
     public static void main(String[] args) {
-        System.out.print("Generate some instances");
-
         String rudik_config = "src/main/config/DbpediaConfiguration.xml";
         int max_instances = 500;
-        if(args[0] != null){
+        System.out.println(args.length);
+
+        if(args.length == 1){
             max_instances = Integer.parseInt(args[0]);
-        }
-        if (args[1] != null){
+        }else if(args.length == 2){
+            max_instances = Integer.parseInt(args[0]);
             rudik_config = args[1];
+        }else if(args.length > 2){
+            System.err.println("Three parameter where passed to GenerateInstances only two are allowed!");
+            System.exit(1);
+        }else{
+            System.out.println("Using default parameters");
         }
+        System.out.println(String.format("Maximum number of generated instances: %s", max_instances));
+        System.out.println(String.format("Using configuration: %s", rudik_config));
 
 
         //store the atoms to use them to construct the graph
@@ -59,10 +66,10 @@ public class GenerateInstances {
         MongoCollection<Document> rules = database.getCollection("rules");
         MongoCollection<Document> instances = database.getCollection("instances");
 
+        long rule_count = rules.countDocuments();
+        System.out.printf("Generating instances for %s rules\n", rule_count);
         // Document rule = rules.find(new Document("_id", new ObjectId("5c0142dda08b340c0ed763ba"))).first();
         for (Document rule : rules.find()) {
-            rule.get("_id");
-
 
             ObjectId rule_id = (ObjectId) rule.get("_id");
             String predicate = (String) rule.get("predicate");
@@ -193,6 +200,8 @@ public class GenerateInstances {
                     }
                 }
             }
+            rule_count--;
+            System.out.printf("%s rules remaining ...\n", rule_count);
         }
         System.exit(0);
     }
