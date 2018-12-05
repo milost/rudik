@@ -10,6 +10,8 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.XMLConfiguration;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
@@ -36,6 +38,25 @@ public class GenerateInstances {
     }
 
     public static void main(String[] args) {
+
+        // load backend configuration
+        String backend_config_path = "src/main/config/backend.xml";
+        XMLConfiguration backend_config = null;
+        try {
+            backend_config = new XMLConfiguration(backend_config_path);
+        } catch (ConfigurationException e) {
+            System.err.println(String.format("No configuration file could be found at the path: %s", backend_config_path));
+            e.printStackTrace();
+        }
+
+        String host = backend_config.getString("backend.host", "");
+        Integer port = backend_config.getInt("backend.port");
+        String username = backend_config.getString("backend.username");
+        String password = backend_config.getString("backend.password");
+        String authSource = backend_config.getString("backend.authSource");
+        String authMechanism = backend_config.getString("backend.authMechanism");
+        String database = backend_config.getString("backend.database");
+
         String rudik_config = "src/main/config/DbpediaConfiguration.xml";
         int max_instances = 500;
         System.out.println(args.length);
@@ -52,7 +73,7 @@ public class GenerateInstances {
             System.out.println("Using default parameters");
         }
         System.out.println(String.format("Maximum number of generated instances: %s", max_instances));
-        System.out.println(String.format("Using configuration: %s", rudik_config));
+        System.out.println(String.format("Using RuDik configuration: %s", rudik_config));
 
 
         //store the atoms to use them to construct the graph
@@ -60,11 +81,19 @@ public class GenerateInstances {
         Map<String, String> rules_entities_dict = new HashMap<>();
         List<String> returnResult = new ArrayList<>();
 
+        // Build MongoDB connection string
+        String connectionURI = String.format("mongodb://%s:%s@%s:%s/?authSource=%s",
+                username,
+                password,
+                host,
+                port,
+                authSource,
+                authMechanism);
 
-        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
-        MongoDatabase database = mongoClient.getDatabase("sherlox");
-        MongoCollection<Document> rules = database.getCollection("rules");
-        MongoCollection<Document> instances = database.getCollection("instances");
+        MongoClient mongoClient = MongoClients.create(connectionURI);
+        MongoDatabase db = mongoClient.getDatabase(database);
+        MongoCollection<Document> rules = db.getCollection("rules");
+        MongoCollection<Document> instances = db.getCollection("instances");
 
         long rule_count = rules.countDocuments();
         System.out.printf("Generating instances for %s rules\n", rule_count);

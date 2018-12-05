@@ -9,3 +9,4 @@
 *.iml
 out
 build
+/src/main/config/backend.xml

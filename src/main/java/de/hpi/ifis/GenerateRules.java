@@ -47,6 +47,7 @@ public class GenerateRules {
 
     public static void main(String[] args) {
 
+        String backend_config_path = "src/main/config/backend.xml";
         String filePath = "src/main/resources/dbpedia_predicates.txt";
         String rudik_config = "src/main/config/DbpediaConfiguration.xml";
         if(args[0] != null){
@@ -56,9 +57,34 @@ public class GenerateRules {
             rudik_config = args[1];
         }
 
-        MongoClient mongoClient = MongoClients.create("mongodb://localhost:27017");
-        MongoDatabase database = mongoClient.getDatabase("sherlox");
-        MongoCollection<Document> rules = database.getCollection("rules");
+        XMLConfiguration backend_config = null;
+        try {
+            backend_config = new XMLConfiguration(backend_config_path);
+        } catch (ConfigurationException e) {
+            System.err.println(String.format("No configuration file could be found at the path: %s", backend_config_path));
+            e.printStackTrace();
+        }
+
+        String host = backend_config.getString("backend.host", "");
+        Integer port = backend_config.getInt("backend.port");
+        String username = backend_config.getString("backend.username");
+        String password = backend_config.getString("backend.password");
+        String authSource = backend_config.getString("backend.authSource");
+        String authMechanism = backend_config.getString("backend.authMechanism");
+        String database = backend_config.getString("backend.database");
+
+        // Build MongoDB connection string
+        String connectionURI = String.format("mongodb://%s:%s@%s:%s/?authSource=%s",
+                username,
+                password,
+                host,
+                port,
+                authSource,
+                authMechanism);
+
+        MongoClient mongoClient = MongoClients.create(connectionURI);
+        MongoDatabase db = mongoClient.getDatabase(database);
+        MongoCollection<Document> rules = db.getCollection("rules");
 
         System.out.printf("Reading predicates from %s ...\n", filePath);
         Queue<String> predicates = (Queue) readFile(filePath);
