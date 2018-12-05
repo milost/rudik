@@ -50,11 +50,17 @@ public class GenerateRules {
         String backend_config_path = "src/main/config/backend.xml";
         String filePath = "src/main/resources/dbpedia_predicates.txt";
         String rudik_config = "src/main/config/DbpediaConfiguration.xml";
-        if(args[0] != null){
+
+        if(args.length == 1){
             filePath = args[0];
-        }
-        if (args[1] != null){
+        }else if(args.length == 2){
+            filePath = args[0];
             rudik_config = args[1];
+        }else if(args.length > 2){
+            System.err.println("Three parameter where passed to GenerateRules, only two are allowed!");
+            System.exit(1);
+        }else{
+            System.out.println("Using default parameters");
         }
 
         XMLConfiguration backend_config = null;
