@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<root>
+    <backend>
+        <host>localhost</host>
+        <port>27017</port>
+        <database>sherlox</database>
+        <!--<username>user</username>-->
+        <!--<password>password</password>-->
+        <!--<authSource>admin</authSource>-->
+        <!--<authMechanism>SCRAM-SHA-1</authMechanism>-->
+    </backend>
+</root>
