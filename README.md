@@ -142,6 +142,57 @@ Once the above steps are completed, the loader finishes and you are set to issue
 
 The APIs we currently expose are defined in the interface `asu.edu.rule_miner.rudik.rule_generator.HornRuleDiscoveryInterface`. The current implementation, explained in details in the technical report, is defined in the class `asu.edu.rule_miner.rudik.rule_generatorDynamicPruningRuleDiscovery`
 
+# Running RuDiK using Gradle
+The rule and instance generation can also be done using the [Gradle](https://gradle.org) build tool.
+To get a list of all defined tasks, simply run `./gradlew tasks` in the root folder of the project.
+Among many other tasks the task group `RuDik tasks` should also be displayed.
+
+    RuDik tasks
+    -----------
+    generate_instances - Generates instances of RuDik rules
+    generate_rules - Generates RuDik rules
+
+These two tasks can be used to generate rules and corresponding instances.
+
+## Setting up the backend
+Since the generated rules and their instances are stored in a MongoDB, it is necessary to configure the connection parameters of the MongoDB before executing the tasks.
+For this purpose, a file named backend.xml must be created in the [/src/main/config](https://github.com/milost/rudik/tree/develop/src/main/config) folder.
+The folder already contains a preconfigured file ([`backend.default.xml`](https://github.com/milost/rudik/blob/develop/src/main/config/backend.default.xml)) with which it is possible to connect to a locally installed MongoDB instance.
+**ATTENTION**: It is mandatory that the file has the name `backend.xml`.
+If it is necessary to connect to a remote MongoDB instance, the commented parameters can be used.
+An explanation of the individual connection parameters can be found [here](https://docs.mongodb.com/manual/reference/connection-string/)
+
+As soon as the MongoDB configuration has been completed, the generation process can be started.
+
+# Rule Generation
+The rule generation can be started by executing the following command.
+
+    ./gradlew generate_rules --args="[predicate_file_path] [rudik_configuration_file]"
+    
+Here the predicate file contains a list of predicates for which rules should be discovered.
+[dbpedia_predicates.txt](https://github.com/milost/rudik/blob/develop/src/main/resources/dbpedia_predicates.txt) is an example of such a file.
+The RuDik configuration file is the configuration file of RuDik. One such file is the [DbpediaConfiguration.xml](https://github.com/milost/rudik/blob/develop/src/main/config/DbpediaConfiguration.xml).
+These two files can be used to start the rule generation process as follows:
+
+    ./gradlew generate_rules --args="src/main/resources/dbpedia_predicates.txt src/main/config/DbpediaConfiguration.xml"
+
+After the command has been issued, the rule generation should start. The discovered rules are written into the MongoDB for later use.
+
+# Instance Generation
+After some rules have been discovered, concrete instances can also be generated for these rules.
+Instances are created for all rules in the MongoDB.
+The process can be started as follows:
+
+    ./gradlew generate_instances --args="[max_Instances] [rudik_configuration_file]"
+
+Here, the `max_instances` parameter specifies the maximum number of instances to be generated for a rule.
+As in the rule generation case, the rudik_configuration_file` specifies the RuDik configuration file to be used.
+With these two specifications, the instance generation process can be started as follows.
+
+    ./gradlew generate_instances --args="1000 src/main/config/DbpediaConfiguration.xml"
+
+The generated instances are persisted in the MongoDB just like the rules before.
+
 # Contacts
 
 1. [Stefano Ortona](mailto:stefano.ortona@gmail.com)

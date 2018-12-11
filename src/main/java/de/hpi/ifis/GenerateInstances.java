@@ -59,22 +59,22 @@ public class GenerateInstances {
 
         String rudik_config = "src/main/config/DbpediaConfiguration.xml";
         int max_instances = 500;
-        System.out.println(args.length);
 
         if(args.length == 1){
             max_instances = Integer.parseInt(args[0]);
+            System.out.printf("Generating up to %s instances\n", max_instances);
+            System.out.printf("Reading configuration from: %s\n", rudik_config);
         }else if(args.length == 2){
             max_instances = Integer.parseInt(args[0]);
             rudik_config = args[1];
+            System.out.printf("Generating up to %s instances\n", max_instances);
+            System.out.printf("Reading configuration from: %s\n", rudik_config);
         }else if(args.length > 2){
             System.err.println("Three parameter where passed to GenerateInstances only two are allowed!");
             System.exit(1);
         }else{
             System.out.println("Using default parameters");
         }
-        System.out.println(String.format("Maximum number of generated instances: %s", max_instances));
-        System.out.println(String.format("Using RuDik configuration: %s", rudik_config));
-
 
         //store the atoms to use them to construct the graph
         Map<String, List<RuleAtom>> rulesAtomsDict = new HashMap<>();

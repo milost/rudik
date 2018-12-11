@@ -53,9 +53,13 @@ public class GenerateRules {
 
         if(args.length == 1){
             filePath = args[0];
+            System.out.println("Reading predicates from: "+ filePath);
+            System.out.println("Reading configuration from: "+ rudik_config);
         }else if(args.length == 2){
             filePath = args[0];
             rudik_config = args[1];
+            System.out.println("Reading predicates from: "+ filePath);
+            System.out.println("Reading configuration from: "+ rudik_config);
         }else if(args.length > 2){
             System.err.println("Three parameter where passed to GenerateRules, only two are allowed!");
             System.exit(1);
