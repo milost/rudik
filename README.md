@@ -164,7 +164,7 @@ An explanation of the individual connection parameters can be found [here](https
 
 As soon as the MongoDB configuration has been completed, the generation process can be started.
 
-# Rule Generation
+## Rule Generation
 The rule generation can be started by executing the following command.
 
     ./gradlew generate_rules --args="[predicate_file_path] [rudik_configuration_file]"
@@ -178,7 +178,7 @@ These two files can be used to start the rule generation process as follows:
 
 After the command has been issued, the rule generation should start. The discovered rules are written into the MongoDB for later use.
 
-# Instance Generation
+## Instance Generation
 After some rules have been discovered, concrete instances can also be generated for these rules.
 Instances are created for all rules in the MongoDB.
 The process can be started as follows:
