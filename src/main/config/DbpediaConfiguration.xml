@@ -7,7 +7,7 @@
 		<runtime>
 			<num_threads>1</num_threads>
 			<!-- max number of atoms in the output rule -->
-			<max_rule_lenght>2</max_rule_lenght>
+			<max_rule_lenght>3</max_rule_lenght>
 			<!-- if a rule covers more than validation_threshold*(validation set size) validation examples, then it is discared.
 			Default 0.2 -->
 			<score>
@@ -81,9 +81,9 @@
 				</edges>
 				<examples>
 					<!-- Limit positive examples. -1 for unlimited -->
-					<positive>10</positive>
+					<positive>3000</positive>
 					<!-- Limit negative examples. -1 for unlimited -->
-					<negative>10</negative>
+					<negative>10000</negative>
 				</examples>
 			</limits>
 			<include_literals>true</include_literals>
