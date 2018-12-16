@@ -232,5 +232,25 @@ public class RudikApi {
     public void setMaxRuleLength(int length) {
         this.ruleDiscovery.setMaxRuleLength(length);
     }
+    
+    public void setAlphaBetaGammaParameter(double alpha, double beta, double gamma) {
+    	ConfigurationFacility.setAlphaBetaGammaParameter(alpha, beta, gamma);
+    }
+    
+    public void setNegativeExamplesLimit(int nb_negative_examples) {
+    	ConfigurationFacility.setNegativeExamplesLimit(nb_negative_examples);
+    }
+    
+    public void setPositiveExamplesLimit(int nb_positive_examples) {
+    	ConfigurationFacility.setPositiveExamplesLimit(nb_positive_examples);
+    }
+    
+    public void setSampling(double alpha, double beta, double gamma, boolean sample) {
+    	final Configuration config = ConfigurationFacility.getConfiguration();
+    	String sampling_path = config.getString("sampling_path");
+    	sampling = new VariancePopularSampling(alpha, beta, gamma,
+                0.5, 0.5, getSparqlExecutor().getSubjectLimit(),
+                getSparqlExecutor().getObjectLimit(), sample, sampling_path);
+    }
 
 }

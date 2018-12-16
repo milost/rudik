@@ -45,6 +45,11 @@ public class ConfigurationParameterConfigurator {
     final Configuration config = ConfigurationFacility.getConfiguration();
     config.setProperty(Constant.CONF_SCORE_BETA, beta);
   }
+  
+  public static void setGammaParameter(double gamma) {
+	    final Configuration config = ConfigurationFacility.getConfiguration();
+	    config.setProperty(Constant.CONF_SCORE_GAMMA, gamma);
+	  }
 
   public static void setRelationToAvoid(Collection<String> avoidRelation) {
     if (avoidRelation == null) {
