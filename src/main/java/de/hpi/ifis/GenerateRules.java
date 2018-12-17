@@ -94,7 +94,7 @@ public class GenerateRules {
 		} else {
 			connectionURI = String.format("mongodb://%s:%s", host, port);
 		}
-
+		
 		MongoClient mongoClient = MongoClients.create(connectionURI);
 		MongoDatabase db = mongoClient.getDatabase(database);
 		MongoCollection<Document> rules = db.getCollection("rules");
@@ -140,8 +140,6 @@ public class GenerateRules {
 					double beta = score_params.get(j).get("beta") != null ? score_params.get(j).get("beta") : 0.7;
 					double gamma = score_params.get(j).get("gamma") != null ? score_params.get(j).get("gamma") : 0.0;
 
-					API.setSampling(alpha, beta, gamma, true);
-
 					for (int l = 0; l < num_examples.length; l++) {
 						int nb_negative_examples = num_examples[l][0];
 						int nb_positive_examples = num_examples[l][1];
@@ -150,6 +148,7 @@ public class GenerateRules {
 						API.setMaxRuleLength(max_rule_length);
 						API.setNegativeExamplesLimit(nb_negative_examples);
 						API.setPositiveExamplesLimit(nb_positive_examples);
+						API.setSampling(alpha, beta, gamma, true);
 
 						for (int k = 0; k < 2; k++) {
 							RudikResult result = new RudikResult();
@@ -182,8 +181,7 @@ public class GenerateRules {
 								rule.append("premise", r.toString());
 								rule.append("conclusion", String.format("%s(%s,%s)", oneResult.getTargetPredicate(),
 										"subject", "object"));
-								rule.append("hashcode", customHashCode(r, max_rule_length, alpha, beta, gamma,
-										nb_positive_examples, nb_negative_examples));
+								rule.append("hashcode", r.hashCode());
 								// System.out.println("-----------------------------------------------------------------");
 
 								// iterate over all atoms of the rule
@@ -209,6 +207,7 @@ public class GenerateRules {
 
 								rule.append("alpha", alpha);
 								rule.append("beta", beta);
+								rule.append("gamma", gamma);
 								rule.append("nb_negative_examples", nb_negative_examples);
 								rule.append("nb_positive_examples", nb_positive_examples);
 								rule.append("max_rule_length", max_rule_length);
