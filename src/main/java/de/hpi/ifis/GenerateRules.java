@@ -3,6 +3,7 @@ package de.hpi.ifis;
 import asu.edu.rule_miner.rudik.api.RudikApi;
 import asu.edu.rule_miner.rudik.api.model.HornRuleResult;
 import asu.edu.rule_miner.rudik.api.model.RudikResult;
+import asu.edu.rule_miner.rudik.configuration.Constant;
 import asu.edu.rule_miner.rudik.model.horn_rule.HornRule;
 import asu.edu.rule_miner.rudik.model.horn_rule.RuleAtom;
 import com.mongodb.client.MongoClient;
@@ -10,7 +11,9 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import jena.schemagen;
+import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.bson.Document;
 
@@ -52,6 +55,7 @@ public class GenerateRules {
 		String backend_config_path = "src/main/config/backend.xml";
 		String filePath = "src/main/resources/dbpedia_predicates.txt";
 		String rudik_config = "src/main/config/DbpediaConfiguration.xml";
+		String parameters_path = "src/main/config/ParametersConfiguration.xml";
 
 		if (args.length == 1) {
 			filePath = args[0];
@@ -109,26 +113,54 @@ public class GenerateRules {
 
 		RudikApi API = new RudikApi(rudik_config, 5 * 60, true, 500);
 
+		XMLConfiguration param_config = null;
 		List<Map<String, Double>> score_params = new ArrayList<>();
 		Map<String, Double> score = new HashMap<String, Double>();
-		score.put("alpha", 0.3);
-		score.put("beta", 0.6);
-		score.put("gamma", 0.1);
-		score_params.add(0, score);
-		Map<String, Double> score2 = new HashMap<String, Double>();
-		score2.put("alpha", 0.2);
-		score2.put("beta", 0.8);
-		score2.put("gamma", 0.0);
-		score_params.add(0, score2);
-		Map<String, Double> score3 = new HashMap<String, Double>();
-		score3.put("alpha", 0.4);
-		score3.put("beta", 0.3);
-		score3.put("gamma", 0.2);
-		score_params.add(0, score3);
-
-		int[][] num_examples = new int[][] { { 20, 20 }, { 100, 100 }, { 500, 500 }, { 2000, 2000 } };
-
-		int[] max_length_params = new int[] { 2, 3, 4 };
+		int[][] num_examples = new int[][] {{20,20}};
+		int[] max_length_params = new int[] { 2 };
+		try {
+			param_config = new XMLConfiguration(parameters_path);
+			
+			// Get alpha, beta, gamma parameters
+			if (param_config.containsKey(Constant.CONF_SCORE_PARAMS)) {
+				List<HierarchicalConfiguration> scores = param_config.configurationsAt(Constant.CONF_SCORE_PARAMS);
+				for(HierarchicalConfiguration score_tmp : scores) {
+					score.put("alpha", score_tmp.getDouble("alpha"));
+					score.put("beta", score_tmp.getDouble("beta"));
+					score.put("gamma", score_tmp.getDouble("gamma"));
+					score_params.add(0, score);
+				}
+			}
+			
+			// Get number of positive negative examples parameters
+			if (param_config.containsKey(Constant.CONF_EXAMPLES_PARAMS)) {
+				List<HierarchicalConfiguration> examples = param_config.configurationsAt(Constant.CONF_EXAMPLES_PARAMS);
+				num_examples = new int[examples.size()][2];
+				
+				for (int i = 0; i < examples.size(); i++) {
+					HierarchicalConfiguration example_tmp = examples.get(i);
+					num_examples[i][0] = example_tmp.getInt("positive");
+					num_examples[i][1] = example_tmp.getInt("negative");
+				}
+			}
+			
+			// Get max length rule parameters
+			if (param_config.containsKey(Constant.CONF_MAX_LENGTH_PARAMS)) {
+				List<HierarchicalConfiguration> max_length_rules = param_config.configurationsAt(Constant.CONF_MAX_LENGTH_PARAMS);
+				max_length_params = new int[max_length_rules.size()];
+				int n = max_length_rules.size();
+				
+				for (int i = 0; i < max_length_rules.size(); i++) {
+					HierarchicalConfiguration max_length = max_length_rules.get(i);
+					max_length_params[i] = Integer.parseInt(max_length.getRootNode().getValue().toString());
+				}
+			}
+			
+		} catch (ConfigurationException e) {
+			System.err.println(
+					String.format("No configuration file could be found at the path: %s", backend_config_path));
+			e.printStackTrace();
+		}
 
 		while (!predicates.isEmpty()) {
 			String predicate = predicates.poll();

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<rule_miner xml:space="preserve">
+	<score_params>
+        <score>
+			<alpha>0.3</alpha>
+			<beta>0.7</beta>
+			<gamma>0</gamma>
+		</score>
+
+        <score>
+			<alpha>0.3</alpha>
+			<beta>0.6</beta>
+			<gamma>0.1</gamma>
+		</score>
+
+		<score>
+			<alpha>0.2</alpha>
+			<beta>0.8</beta>
+			<gamma>0</gamma>
+		</score>
+    </score_params>
+
+    <limits>
+		<examples>	
+			<positive>20</positive>
+			<negative>20</negative>
+		</examples>
+
+		<examples>	
+			<positive>100</positive>
+			<negative>100</negative>
+		</examples>
+
+		<examples>	
+			<positive>500</positive>
+			<negative>500</negative>
+		</examples>
+
+		<examples>	
+			<positive>2000</positive>
+			<negative>2000</negative>
+		</examples>
+	</limits>
+
+
+	<max_length_params>
+		<max_rule_lenght>2</max_rule_lenght>
+		<max_rule_lenght>3</max_rule_lenght>
+		<max_rule_lenght>4</max_rule_lenght>
+	</max_length_params>
+</rule_miner>
