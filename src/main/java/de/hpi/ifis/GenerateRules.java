@@ -10,12 +10,16 @@ import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.result.UpdateResult;
+import static com.mongodb.client.model.Filters.*;
+import static com.mongodb.client.model.Updates.*;
 import jena.schemagen;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import javax.sound.midi.Soundbank;
 import java.io.BufferedReader;
@@ -161,7 +165,7 @@ public class GenerateRules {
 					String.format("No configuration file could be found at the path: %s", backend_config_path));
 			e.printStackTrace();
 		}
-
+		
 		while (!predicates.isEmpty()) {
 			String predicate = predicates.poll();
 
@@ -180,7 +184,15 @@ public class GenerateRules {
 						API.setMaxRuleLength(max_rule_length);
 						API.setNegativeExamplesLimit(nb_negative_examples);
 						API.setPositiveExamplesLimit(nb_positive_examples);
-						API.setSampling(alpha, beta, gamma, true);
+						API.setSampling(alpha, beta, gamma);
+						
+						Document run_config = new Document();
+						run_config.append("alpha", alpha);
+						run_config.append("beta", beta);
+						run_config.append("gamma", gamma);
+						run_config.append("max_rule_length", max_rule_length);
+						run_config.append("nb_negative_examples", nb_negative_examples);
+						run_config.append("nb_positive_examples", nb_positive_examples);
 
 						for (int k = 0; k < 2; k++) {
 							RudikResult result = new RudikResult();
@@ -237,17 +249,22 @@ public class GenerateRules {
 										.append("predicate", oneResult.getTargetPredicate()).append("object", "object");
 								rule.append("conclusion_triple", conclusion_triple);
 
-								rule.append("alpha", alpha);
-								rule.append("beta", beta);
-								rule.append("gamma", gamma);
-								rule.append("nb_negative_examples", nb_negative_examples);
-								rule.append("nb_positive_examples", nb_positive_examples);
-								rule.append("max_rule_length", max_rule_length);
 								rule.append("human_confidence", -1);
 
 								Document exists = rules.find(new Document("hashcode", rule.get("hashcode"))).first();
 								if (exists == null) {
+									List<Document> configuration = new LinkedList<Document>();
+									configuration.add(run_config);
+									rule.append("configuration", configuration);
 									rules.insertOne(rule);
+								} else {
+									List<Document> configuration = (List<Document>) exists.get("configuration");
+									if(!configuration.contains(run_config)) {
+										configuration.add(run_config);
+										rules.updateOne(
+								                eq("_id", exists.get("_id")),
+								                combine(set("configuration", configuration)));
+									}
 								}
 							}
 						}
@@ -259,18 +276,6 @@ public class GenerateRules {
 			System.out.printf("%s predicates remaining", predicates.size());
 		}
 		System.exit(0);
-	}
-
-	private static int customHashCode(HornRule r, int max_rule_length, double alpha, double beta, double gamma,
-			int nb_positive_examples, int nb_negative_examples) {
-		final int prime = 31;
-		int result = 1;
-		int alpha_hashcode = (int) (alpha * 100);
-		int beta_hashcode = (int) (beta * 100);
-		int gamma_hashcode = (int) (gamma * 100);
-		result = prime * result + r.hashCode() + alpha_hashcode + beta_hashcode + gamma_hashcode + max_rule_length
-				+ nb_negative_examples + nb_positive_examples;
-		return result;
 	}
 
 }
