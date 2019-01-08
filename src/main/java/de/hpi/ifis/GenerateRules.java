@@ -119,7 +119,7 @@ public class GenerateRules {
 
 		XMLConfiguration param_config = null;
 		List<Map<String, Double>> score_params = new ArrayList<>();
-		Map<String, Double> score = new HashMap<String, Double>();
+		
 		int[][] num_examples = new int[][] {{20,20}};
 		int[] max_length_params = new int[] { 2 };
 		try {
@@ -129,10 +129,11 @@ public class GenerateRules {
 			if (param_config.containsKey(Constant.CONF_SCORE_PARAMS)) {
 				List<HierarchicalConfiguration> scores = param_config.configurationsAt(Constant.CONF_SCORE_PARAMS);
 				for(HierarchicalConfiguration score_tmp : scores) {
+					Map<String, Double> score = new HashMap<String, Double>();
 					score.put("alpha", score_tmp.getDouble("alpha"));
 					score.put("beta", score_tmp.getDouble("beta"));
 					score.put("gamma", score_tmp.getDouble("gamma"));
-					score_params.add(0, score);
+					score_params.add(score);
 				}
 			}
 			

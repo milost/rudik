@@ -2,8 +2,8 @@
 <rule_miner xml:space="preserve">
 	<score_params>
         <score>
-			<alpha>0.3</alpha>
-			<beta>0.7</beta>
+			<alpha>0.4</alpha>
+			<beta>0.6</beta>
 			<gamma>0</gamma>
 		</score>
 
@@ -14,8 +14,8 @@
 		</score>
 
 		<score>
-			<alpha>0.2</alpha>
-			<beta>0.8</beta>
+			<alpha>0.6</alpha>
+			<beta>0.4</beta>
 			<gamma>0</gamma>
 		</score>
     </score_params>
@@ -32,13 +32,18 @@
 		</examples>
 
 		<examples>	
-			<positive>500</positive>
-			<negative>500</negative>
+			<positive>1000</positive>
+			<negative>1000</negative>
 		</examples>
 
 		<examples>	
-			<positive>2000</positive>
-			<negative>2000</negative>
+			<positive>5000</positive>
+			<negative>5000</negative>
+		</examples>
+
+		<examples>	
+			<positive>10000</positive>
+			<negative>10000</negative>
 		</examples>
 	</limits>
 
