@@ -10,3 +10,4 @@
 out
 build
 /src/main/config/backend.xml
+/src/main/resources/statsPerEntity.txt
