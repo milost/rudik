@@ -49,13 +49,13 @@ public class GenerateInstances {
             e.printStackTrace();
         }
 
-        String host = backend_config.getString("backend.host", "");
-        Integer port = backend_config.getInt("backend.port");
-        String username = backend_config.getString("backend.username");
-        String password = backend_config.getString("backend.password");
-        String authSource = backend_config.getString("backend.authSource");
-        String authMechanism = backend_config.getString("backend.authMechanism");
-        String database = backend_config.getString("backend.database");
+		String host = backend_config.getString("backend.host", "localhost");
+		Integer port = backend_config.getInt("backend.port", 27017);
+		String username = backend_config.getString("backend.username", "");
+		String password = backend_config.getString("backend.password", "");
+		String authSource = backend_config.getString("backend.authSource", "admin");
+		String authMechanism = backend_config.getString("backend.authMechanism");
+		String database = backend_config.getString("backend.database");
 
         String rudik_config = "src/main/config/DbpediaConfiguration.xml";
         int max_instances = 500;
@@ -81,14 +81,14 @@ public class GenerateInstances {
         Map<String, String> rules_entities_dict = new HashMap<>();
         List<String> returnResult = new ArrayList<>();
 
-        // Build MongoDB connection string
-        String connectionURI = String.format("mongodb://%s:%s@%s:%s/?authSource=%s",
-                username,
-                password,
-                host,
-                port,
-                authSource,
-                authMechanism);
+		// Build MongoDB connection string
+		String connectionURI = "";
+		if (username.length() != 0 && password.length() != 0 && database.length() != 0) {
+			connectionURI = String.format("mongodb://%s:%s@%s:%s/%s?authSource=%s", username, password, host, port,
+					database, authSource, authMechanism);
+		} else {
+			connectionURI = String.format("mongodb://%s:%s", host, port);
+		}
 
         MongoClient mongoClient = MongoClients.create(connectionURI);
         MongoDatabase db = mongoClient.getDatabase(database);
@@ -139,6 +139,10 @@ public class GenerateInstances {
                         List<RuleAtom> ruleAtomsList = new LinkedList<>();
 
                         // iterate over all instantiated atoms of the rule
+                        Document assignment = new Document();
+                        
+                        assignment.append("subject", instance.getRuleSubject());
+                        assignment.append("object", instance.getRuleObject());
                         for (final RuleAtom atom : instance.getInstantiatedAtoms()) {
                             //list of atoms composing a rule
                             // get <subject,relation,object> of one atom - this could be something like
@@ -176,12 +180,11 @@ public class GenerateInstances {
                                     .append("predicate", predicate);
 
                             List<Document> instance_atoms = new LinkedList<>();
-                            Document assignment = new Document();
+                            
                             StringBuilder premise = new StringBuilder();
                             for (RuleAtom atom : ruleAtomsList) {
                                 // build rule entities
-                                assignment.append("subject", atom.getSubject());
-                                assignment.append("object", atom.getObject());
+                                
 
                                 instance_atoms.add(new Document("subject", atom.getSubject())
                                         .append("predicate", atom.getRelation())
