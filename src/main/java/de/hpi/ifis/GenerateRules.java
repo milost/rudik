@@ -45,6 +45,16 @@ public class GenerateRules {
         return lines;
     }
 
+    private static XMLConfiguration readConfiguration(String filepath) {
+        try {
+            return new XMLConfiguration(filepath);
+        } catch (ConfigurationException e) {
+            System.err.println(String.format("No configuration file could be found at the path: %s", filepath));
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
 
         String backend_config_path = "src/main/config/backend.xml";
@@ -67,13 +77,17 @@ public class GenerateRules {
             System.out.println("Using default parameters");
         }
 
-        XMLConfiguration backend_config = null;
-        try {
-            backend_config = new XMLConfiguration(backend_config_path);
-        } catch (ConfigurationException e) {
-            System.err.println(String.format("No configuration file could be found at the path: %s", backend_config_path));
-            e.printStackTrace();
-        }
+        XMLConfiguration backend_config = readConfiguration(backend_config_path);
+        XMLConfiguration rudik_configuration = readConfiguration(rudik_config);
+
+        String knowledge_base = rudik_configuration.getString("knowledge_base", "");
+        String sparql_endpoint = rudik_configuration.getString("naive.sparql.parameters.sparql_endpoint",
+                "");
+        String graph_iri = rudik_configuration.getString("naive.sparql.graph_iri", "");
+        Integer positive_examples = rudik_configuration.getInt("naive.sparql.limits.examples.positive",
+                20);
+        Integer negative_examples = rudik_configuration.getInt("naive.sparql.limits.examples.negative",
+                20);
 
         String host = backend_config.getString("backend.host", "");
         Integer port = backend_config.getInt("backend.port");
@@ -89,8 +103,7 @@ public class GenerateRules {
                 password,
                 host,
                 port,
-                authSource,
-                authMechanism);
+                authSource);
 
         MongoClient mongoClient = MongoClients.create(connectionURI);
         MongoDatabase db = mongoClient.getDatabase(database);
@@ -112,10 +125,13 @@ public class GenerateRules {
         while(!predicates.isEmpty()){
             String predicate = predicates.poll();
 
-            final RudikResult result = API.discoverPositiveRules(predicate, 20, 20);
+            final RudikResult result = API.discoverPositiveRules(predicate, positive_examples, negative_examples);
 
             for (final HornRuleResult oneResult : result.getResults()) {
                 Document rule = new Document("predicate", oneResult.getTargetPredicate());
+                rule.append("knowledge_base", knowledge_base);
+                rule.append("sparql_endpoint", sparql_endpoint);
+                rule.append("graph_iri", graph_iri);
                 System.out.println(String.format("Generated for predicate: %s", oneResult.getTargetPredicate()));
                 // get type of the rule = positive
 
