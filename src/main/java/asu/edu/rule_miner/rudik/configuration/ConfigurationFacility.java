@@ -105,14 +105,23 @@ public class ConfigurationFacility {
   public static void setMaxRuleLength(int maxRuleLen) {
     ConfigurationParameterConfigurator.setMaxRuleLength(maxRuleLen);
   }
+  
+  public static void setPositiveExamplesLimit(int limit) {
+	    ConfigurationParameterConfigurator.setPositiveExamplesLimit(limit);
+  }
 
-  public static void setAlphaBetaParameter(double alpha, double beta) {
-    if ((alpha + beta) != 1) {
-      LOGGER.warn("Trying to set values of alpha and beta to '{}' and '{}' that do not add up to 1.0, skipping.", alpha,
-          beta);
+  public static void setNegativeExamplesLimit(int limit) {
+	    ConfigurationParameterConfigurator.setNegativeExamplesLimit(limit);
+  }
+
+  public static void setAlphaBetaGammaParameter(double alpha, double beta, double gamma) {
+    if ((alpha + beta + gamma) != 1) {
+      LOGGER.warn("Trying to set values of alpha, beta and gamma to '{}', '{}' and '{}' that do not add up to 1.0, skipping.", alpha,
+          beta, gamma);
     }
     ConfigurationParameterConfigurator.setAlphaParameter(alpha);
     ConfigurationParameterConfigurator.setBetaParameter(beta);
+    ConfigurationParameterConfigurator.setGammaParameter(gamma);
   }
 
   public static void setRelationToAvoid(List<String> avoidRelation) {

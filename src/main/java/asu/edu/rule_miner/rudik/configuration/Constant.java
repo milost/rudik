@@ -19,6 +19,9 @@ public class Constant {
   public static String CONF_SCORE_BETA = "naive.runtime.score.beta";
   public static String CONF_SCORE_GAMMA = "naive.runtime.score.gamma";
   public static String CONF_MAX_RULE_LEN = "naive.runtime.max_rule_lenght";
+  public static String CONF_SCORE_PARAMS = "score_params.score";
+  public static String CONF_EXAMPLES_PARAMS = "limits.examples";
+  public static String CONF_MAX_LENGTH_PARAMS = "max_length_params.max_rule_lenght";
 
   public static String CONF_SPARQL_ENGINE = "naive.sparql";
   public static String CONF_RELATION_PREFIX = "relation_prefix.prefix";

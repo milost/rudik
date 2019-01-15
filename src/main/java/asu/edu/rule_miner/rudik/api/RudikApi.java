@@ -34,6 +34,8 @@ public class RudikApi {
     private VariancePopularSampling sampling;
     // by default, timeout set to 10 minutes
     private final int timeout = 10 * 60;
+    // sample
+    private boolean sample = false;
 
     private int maxInstantiationNumber = 1000;
 
@@ -75,6 +77,7 @@ public class RudikApi {
         ConfigurationFacility.setConfigurationFile(filePath);
         this.maxInstantiationNumber = maxInstantiationNumber;
         initialiseObjects(timeout);
+        this.sample = sample;
 
         //initialize sampling with the parameters selected through the API with a subject and object weight of 0.5
         sampling = new VariancePopularSampling(alpha, beta, gamma,
@@ -98,7 +101,7 @@ public class RudikApi {
                     boolean sample,
                     final String samplePath) {
         ConfigurationFacility.setConfigurationFile(filePath);
-
+        this.sample = sample;
         initialiseObjects(timeout);
         //initialize sampling with the parameters selected through the API with a subject and object weight of 0.5
         sampling = new VariancePopularSampling(alpha, beta, gamma,
@@ -231,6 +234,26 @@ public class RudikApi {
 
     public void setMaxRuleLength(int length) {
         this.ruleDiscovery.setMaxRuleLength(length);
+    }
+    
+    public void setAlphaBetaGammaParameter(double alpha, double beta, double gamma) {
+    	ConfigurationFacility.setAlphaBetaGammaParameter(alpha, beta, gamma);
+    }
+    
+    public void setNegativeExamplesLimit(int nb_negative_examples) {
+    	ConfigurationFacility.setNegativeExamplesLimit(nb_negative_examples);
+    }
+    
+    public void setPositiveExamplesLimit(int nb_positive_examples) {
+    	ConfigurationFacility.setPositiveExamplesLimit(nb_positive_examples);
+    }
+    
+    public void setSampling(double alpha, double beta, double gamma) {
+    	final Configuration config = ConfigurationFacility.getConfiguration();
+    	String sampling_path = config.getString("sampling_path");
+    	sampling = new VariancePopularSampling(alpha, beta, gamma,
+                0.5, 0.5, getSparqlExecutor().getSubjectLimit(),
+                getSparqlExecutor().getObjectLimit(), this.sample, sampling_path);
     }
 
 }
