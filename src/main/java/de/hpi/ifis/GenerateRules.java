@@ -98,15 +98,15 @@ public class GenerateRules {
 
         String host = backend_config.getString("backend.host", "localhost");
         Integer port = backend_config.getInt("backend.port", 27017);
-        String username = backend_config.getString("backend.username");
-        String password = backend_config.getString("backend.password");
+        String username = backend_config.getString("backend.username", "");
+        String password = backend_config.getString("backend.password", "");
         String authSource = backend_config.getString("backend.authSource", "admin");
-        String authMechanism = backend_config.getString("backend.authMechanism");
-        String database = backend_config.getString("backend.database");
+        String authMechanism = backend_config.getString("backend.authMechanism", "SCRAM-SHA-1");
+        String database = backend_config.getString("backend.database", "sherlox");
 
 		// Build MongoDB connection string
-		String connectionURI = "";
-		if (username.length() != 0 && password.length() != 0 && database.length() != 0) {
+		String connectionURI;
+		if (username.length() != 0 && password.length() != 0) {
 			connectionURI = String.format("mongodb://%s:%s@%s:%s/%s?authSource=%s", username, password, host, port,
 					database, authSource, authMechanism);
 		} else {
@@ -163,7 +163,6 @@ public class GenerateRules {
 			if (param_config.containsKey(Constant.CONF_MAX_LENGTH_PARAMS)) {
 				List<HierarchicalConfiguration> max_length_rules = param_config.configurationsAt(Constant.CONF_MAX_LENGTH_PARAMS);
 				max_length_params = new int[max_length_rules.size()];
-				int n = max_length_rules.size();
 
 				for (int i = 0; i < max_length_rules.size(); i++) {
 					HierarchicalConfiguration max_length = max_length_rules.get(i);
