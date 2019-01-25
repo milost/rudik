@@ -3,6 +3,10 @@ package asu.edu.rule_miner.rudik.rule_generator.score;
 import java.util.Map;
 import java.util.Set;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.FileAppender;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Maps;
@@ -11,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Sets;
 
+import asu.edu.rule_miner.rudik.App;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 import asu.edu.rule_miner.rudik.configuration.Constant;
 import asu.edu.rule_miner.rudik.model.horn_rule.MultipleGraphHornRule;
@@ -25,7 +30,7 @@ import asu.edu.rule_miner.rudik.sparql.SparqlExecutor;
  */
 public class DynamicScoreComputation {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(DynamicScoreComputation.class.getName());
+  private final static Logger LOGGER = App.getLogger(DynamicScoreComputation.class.getName());
 
   private double alpha = 0.3;
   private double beta = 0.6;

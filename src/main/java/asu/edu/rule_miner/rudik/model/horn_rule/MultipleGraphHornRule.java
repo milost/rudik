@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.ext.com.google.common.collect.Maps;
@@ -23,7 +24,7 @@ import asu.edu.rule_miner.rudik.model.rdf.graph.Graph;
  */
 public class MultipleGraphHornRule<T> extends HornRule {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(MultipleGraphHornRule.class.getName());
+  private final static Logger LOGGER = App.getLogger(MultipleGraphHornRule.class.getName());
 
   private Graph<T> g;
 

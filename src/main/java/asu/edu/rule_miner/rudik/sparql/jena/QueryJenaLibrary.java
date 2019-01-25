@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 
+import asu.edu.rule_miner.rudik.App;
 import asu.edu.rule_miner.rudik.model.horn_rule.RuleAtom;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Edge;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Graph;
@@ -36,7 +37,7 @@ public abstract class QueryJenaLibrary extends SparqlExecutor {
     super(config);
   }
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(QuerySparqlRemoteEndpoint.class.getName());
+  private final static Logger LOGGER = App.getLogger(QuerySparqlRemoteEndpoint.class.getName());
 
   @Override
   public void executeQuery(final String entity, final Graph<String> graph,

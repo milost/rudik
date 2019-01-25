@@ -22,6 +22,7 @@ import org.apache.jena.tdb.TDBFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asu.edu.rule_miner.rudik.App;
 import asu.edu.rule_miner.rudik.RuleMinerException;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 import asu.edu.rule_miner.rudik.sparql.jena.QueryJenaLibrary;
@@ -30,7 +31,7 @@ public class QueryJenaRDFAPI extends QueryJenaLibrary{
 
 	private Dataset dataset;
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(QueryJenaRDFAPI.class.getName());
+	private final static Logger LOGGER = App.getLogger(QueryJenaRDFAPI.class.getName());
 
 	public QueryJenaRDFAPI(Configuration config) {
 		super(config);
@@ -51,7 +52,7 @@ public class QueryJenaRDFAPI extends QueryJenaLibrary{
 		dataset.end();
 		return results;
 	}
-	
+
 	public static void main(String[] args) throws Exception{
 		ConfigurationFacility.getConfiguration();
 //		Dataset dataset = TDBFactory.createDataset("/Users/sortona/Documents/KDR/Data/DBPedia/jena") ;
@@ -61,9 +62,9 @@ public class QueryJenaRDFAPI extends QueryJenaLibrary{
 //		QueryExecution qExec = QueryExecutionFactory.create("select * {{SELECT * where {?subject ?predicate <"+entity+">.} LIMIT 5000}"
 //				+ " UNION {SELECT * where {<"+entity+"> ?predicate ?object.}}}", dataset);
 //		ResultSet results = qExec.execSelect() ;
-//		
+//
 //		Map<String,Set<String>> output = Maps.newHashMap();
-//		
+//
 //		while(results.hasNext()){
 //			QuerySolution solution = results.next();
 //			String relation = solution.get("?predicate").toString();
@@ -78,12 +79,12 @@ public class QueryJenaRDFAPI extends QueryJenaLibrary{
 //		}
 //		dataset.end();
 //		System.out.println((System.currentTimeMillis()-start)/1000.);
-//		
-//		
+//
+//
 //		QueryJenaRDFAPI e = new QueryJenaRDFAPI(ConfigurationFacility.getConfiguration().subset("naive.sparql"));
 //		//e.query();
 	}
-	
+
 	public void query() throws Exception{
 
 		int numThreads = 100;
@@ -133,7 +134,7 @@ public class QueryJenaRDFAPI extends QueryJenaLibrary{
 		private Set<String> examples;
 
 		private Map<String,Set<String>> output;
-		
+
 		Dataset dataset;
 
 
@@ -152,7 +153,7 @@ public class QueryJenaRDFAPI extends QueryJenaLibrary{
 					//encodedExample = EncodingUtility.escapeSQLCharacter(oneExample);
 					qExec = QueryExecutionFactory.create("SELECT * where {<"+oneExample+"> ?predicate ?object.}", dataset);
 					ResultSet results = qExec.execSelect() ;
-					
+
 					while(results.hasNext()){
 						QuerySolution solution = results.next();
 						String relation = solution.get("?predicate").toString();
@@ -168,7 +169,7 @@ public class QueryJenaRDFAPI extends QueryJenaLibrary{
 
 					qExec = QueryExecutionFactory.create("SELECT * where {?subject ?predicate <"+oneExample+">.} LIMIT 5000", dataset);
 					results = qExec.execSelect() ;
-					
+
 					while(results.hasNext()){
 						QuerySolution solution = results.next();
 						String relation = solution.get("?predicate").toString();

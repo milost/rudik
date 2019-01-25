@@ -7,13 +7,14 @@ import org.apache.jena.query.ResultSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asu.edu.rule_miner.rudik.App;
 import asu.edu.rule_miner.rudik.RuleMinerException;
 import asu.edu.rule_miner.rudik.configuration.Constant;
 import asu.edu.rule_miner.rudik.sparql.jena.QueryJenaLibrary;
 
 public class QuerySparqlRemoteEndpoint extends QueryJenaLibrary {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(QuerySparqlRemoteEndpoint.class.getName());
+  private final static Logger LOGGER = App.getLogger(QuerySparqlRemoteEndpoint.class.getName());
 
   private final String sparqlEndpoint;
 

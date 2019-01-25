@@ -3,6 +3,7 @@ package asu.edu.rule_miner.rudik.rule_generator;
 import java.util.Map;
 import java.util.Set;
 
+import asu.edu.rule_miner.rudik.App;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,7 +17,7 @@ import asu.edu.rule_miner.rudik.sparql.SparqlExecutor;
  */
 public class OneExampleRuleDiscovery implements Runnable {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(OneExampleRuleDiscovery.class.getName());
+  private final static Logger LOGGER = App.getLogger(OneExampleRuleDiscovery.class.getName());
 
   private final Set<String> input;
 

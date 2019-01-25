@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,8 +32,7 @@ import asu.edu.rule_miner.rudik.sparql.SparqlExecutor;
  */
 public class DynamicPruningRuleDiscovery extends HornRuleDiscovery {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(DynamicPruningRuleDiscovery.class.getName());
-
+  private final static Logger LOGGER = App.getLogger(DynamicPruningRuleDiscovery.class.getName());
 
   public DynamicPruningRuleDiscovery() {
     super();

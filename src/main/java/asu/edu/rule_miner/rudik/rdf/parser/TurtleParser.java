@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.commons.io.IOUtils;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.rdf.model.Model;
@@ -20,7 +21,7 @@ import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 
 public class TurtleParser {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(TurtleParser.class.getName());
+  private final static Logger LOGGER = App.getLogger(TurtleParser.class.getName());
 
   public static void main(final String[] args) throws Exception{
     ConfigurationFacility.getConfiguration();
@@ -76,7 +77,7 @@ public class TurtleParser {
       in.close();
       model.removeAll();
       model = ModelFactory.createDefaultModel();
-    }	
+    }
     flushOutput(goodLines, badLines, fileName);
     reader.close();
     LOGGER.info("Found a total of {} good lines and {} bad lines.",goodLinesCount,badLinesCount);

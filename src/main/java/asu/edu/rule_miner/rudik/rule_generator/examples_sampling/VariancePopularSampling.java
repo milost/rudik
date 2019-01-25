@@ -16,9 +16,14 @@ import java.util.Set;
 
 import asu.edu.rule_miner.rudik.api.RudikApi;
 import asu.edu.rule_miner.rudik.rule_generator.DynamicPruningRuleDiscovery;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.FileAppender;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Sets;
 
+import asu.edu.rule_miner.rudik.App;
 import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Edge;
 import asu.edu.rule_miner.rudik.model.rdf.graph.Graph;
@@ -28,13 +33,13 @@ import org.slf4j.LoggerFactory;
 
 public class VariancePopularSampling {
 
-    private final static Logger LOGGER = LoggerFactory.getLogger(DynamicPruningRuleDiscovery.class.getName());
+    private final static Logger LOGGER = App.getLogger(DynamicPruningRuleDiscovery.class.getName());
 
     double alpha, beta, gamma, subWeight, objWeight;
 	int subjectLimit, objectLimit;
 	boolean isTopK; // to indicate whether it is topK sampling or uniform sampling
 	String filePath;
-	
+
 	public VariancePopularSampling(double alpha, double beta, double gamma, double subWeight, double objWeight, int subjectLimit, int objectLimit, boolean isTopK){
 		this(alpha, beta, gamma, subWeight, objWeight, subjectLimit, objectLimit, isTopK, "src/main/resources/statsPerEntity.txt");
 	}
@@ -66,11 +71,11 @@ public class VariancePopularSampling {
 		else
 			this.objectLimit = objectLimit;
 	}
-	
+
 	public ArrayList<Double> computeEntityStats(String entity, Set<Edge<String>> edges, int limit){
 		ArrayList<Double> toReturn = new ArrayList<Double>();
 		HashMap<String,ArrayList<Double>> diversePopularity = new HashMap<String,ArrayList<Double>>();
-		ArrayList<String> inverseFunctionalSet = new ArrayList<String>(); 
+		ArrayList<String> inverseFunctionalSet = new ArrayList<String>();
 		ArrayList<String> labelSet = new ArrayList<String>();
 		//if edges not null compute the stats else put all values to 0
 		if (edges!=null) {
@@ -87,7 +92,7 @@ public class VariancePopularSampling {
                     if (!inverseFunctionalSet.contains(label))
                         inverseFunctionalSet.add(label);
                 }
-			
+
 	/*		if(diversePopularity.containsKey(label) && diversePopularity.get(label).get(0)>limit){
 				if(diversePopularity.get(label).get(1)!=null)
 					values.add(diversePopularity.get(label).get(1)+1.0);
@@ -122,16 +127,16 @@ public class VariancePopularSampling {
             toReturn.add(0.0);
 		    return toReturn;}
 	}
-	
+
 //	public double computePopularity(String entity, Set<Edge<String>> edges){
 //		return 0.0;
 //	}
-//	
+//
 //	public double computeInverseFunctionality(String entity, Set<Edge<String>> edges){
 //		return 0.0;
 //	}
-	
-	private static HashMap sortByValues(HashMap map) { 
+
+	private static HashMap sortByValues(HashMap map) {
 	       List list = new LinkedList(map.entrySet());
 	       // Defined Custom Comparator here
 	       Collections.sort(list, new Comparator() {
@@ -147,7 +152,7 @@ public class VariancePopularSampling {
 	       for (Iterator it = list.iterator(); it.hasNext();) {
 	              Map.Entry entry = (Map.Entry) it.next();
 	              sortedHashMap.put(entry.getKey(), entry.getValue());
-	       } 
+	       }
 	       return sortedHashMap;
 	  }
 

@@ -1,5 +1,6 @@
 package asu.edu.rule_miner.rudik.model.horn_rule;
 
+import asu.edu.rule_miner.rudik.App;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -7,7 +8,7 @@ import asu.edu.rule_miner.rudik.RuleMinerException;
 
 public class RuleAtom {
 
-	private final static Logger LOGGER = LoggerFactory.getLogger(RuleAtom.class.getName());
+	private final static Logger LOGGER = App.getLogger(RuleAtom.class.getName());
 
 	private String subject;
 	private String object;

@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.HierarchicalConfiguration;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +37,7 @@ import asu.edu.rule_miner.rudik.model.rdf.graph.Graph;
  */
 public abstract class SparqlExecutor {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(SparqlExecutor.class.getName());
+  private final static Logger LOGGER = App.getLogger(SparqlExecutor.class.getName());
 
   protected Set<String> prefixQuery;
 

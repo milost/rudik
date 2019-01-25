@@ -3,6 +3,7 @@ package asu.edu.rule_miner.rudik.model.horn_rule;
 import java.util.List;
 import java.util.Set;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.bson.Document;
@@ -23,7 +24,7 @@ import asu.edu.rule_miner.rudik.configuration.Constant;
  */
 public class HornRule {
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(HornRule.class.getName());
+  private final static Logger LOGGER = App.getLogger(HornRule.class.getName());
 
   public static final String START_NODE = "subject";
   public static final String END_NODE = "object";

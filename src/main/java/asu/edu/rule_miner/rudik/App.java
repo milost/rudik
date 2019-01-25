@@ -7,6 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.FileAppender;
 import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,7 +29,31 @@ import asu.edu.rule_miner.rudik.rule_generator.DynamicPruningRuleDiscovery;
  *
  */
 public class App {
-  private final static Logger LOGGER = LoggerFactory.getLogger(App.class.getName());
+  private final static Logger LOGGER = getLogger(App.class.getName());
+
+  public static Logger getLogger(String name) {
+    System.out.println("CONFIGURING LOGGER " + name);
+
+    String file = "logs/generate_rules.log";
+    LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+    PatternLayoutEncoder ple = new PatternLayoutEncoder();
+
+    ple.setPattern("%date %level [%thread] %logger{10} [%file:%line] %msg%n");
+    ple.setContext(lc);
+    ple.start();
+    FileAppender<ILoggingEvent> fileAppender = new FileAppender<ILoggingEvent>();
+    fileAppender.setFile(file);
+    fileAppender.setEncoder(ple);
+    fileAppender.setContext(lc);
+    fileAppender.start();
+
+    ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(name);
+    logger.addAppender(fileAppender);
+    logger.setLevel(Level.DEBUG);
+    logger.setAdditive(false);
+
+    return logger;
+  }
 
   public static void main(String[] args) throws IOException {
 

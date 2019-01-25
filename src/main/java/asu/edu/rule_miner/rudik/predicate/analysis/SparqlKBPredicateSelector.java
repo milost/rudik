@@ -3,6 +3,7 @@ package asu.edu.rule_miner.rudik.predicate.analysis;
 import java.util.Map;
 import java.util.Set;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Maps;
 import org.slf4j.Logger;
@@ -12,9 +13,9 @@ import asu.edu.rule_miner.rudik.configuration.ConfigurationFacility;
 import asu.edu.rule_miner.rudik.sparql.SparqlExecutor;
 
 public class SparqlKBPredicateSelector implements KBPredicateSelector{
-  
-  private final static Logger LOGGER = LoggerFactory.getLogger(SparqlKBPredicateSelector.class.getName());
-  
+
+  private final static Logger LOGGER = App.getLogger(SparqlKBPredicateSelector.class.getName());
+
   final SparqlExecutor executor = ConfigurationFacility.getSparqlExecutor();
 
   @Override

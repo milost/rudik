@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.jena.ext.com.google.common.collect.Lists;
@@ -46,7 +47,7 @@ public abstract class HornRuleDiscovery implements HornRuleDiscoveryInterface {
 
   Boolean isTopK = null;
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(OneExampleRuleDiscovery.class.getName());
+  private final static Logger LOGGER = App.getLogger(OneExampleRuleDiscovery.class.getName());
 
   /**
    * Read config parameters
@@ -72,7 +73,7 @@ public abstract class HornRuleDiscovery implements HornRuleDiscoveryInterface {
     }
 
   }
- 
+
   @Override
   public abstract Map<HornRule, Double> discoverPositiveHornRules(Set<Pair<String, String>> negativeExamples,
       Set<Pair<String, String>> positiveExamples, Set<String> relations, String typeSubject, String typeObject);

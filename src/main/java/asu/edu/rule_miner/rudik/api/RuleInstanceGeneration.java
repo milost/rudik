@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.jena.ext.com.google.common.collect.Lists;
 import org.apache.jena.ext.com.google.common.collect.Sets;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ import asu.edu.rule_miner.rudik.rule_generator.HornRuleDiscoveryInterface;
  */
 public class RuleInstanceGeneration {
 
-  private final static Logger LOG = LoggerFactory.getLogger(RuleInstanceGeneration.class.getName());
+  private final static Logger LOG = App.getLogger(RuleInstanceGeneration.class.getName());
 
   HornRuleDiscoveryInterface discovery;
 

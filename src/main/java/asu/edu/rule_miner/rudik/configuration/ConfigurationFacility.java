@@ -14,6 +14,7 @@ import org.apache.log4j.varia.NullAppender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import asu.edu.rule_miner.rudik.App;
 import asu.edu.rule_miner.rudik.RuleMinerException;
 import asu.edu.rule_miner.rudik.sparql.SparqlExecutor;
 
@@ -21,7 +22,7 @@ public class ConfigurationFacility {
 
   private static Configuration instance;
 
-  private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationFacility.class.getName());
+  private final static Logger LOGGER = App.getLogger(ConfigurationFacility.class.getName());
 
   public synchronized static Configuration getConfiguration() {
     if (instance == null) {
@@ -105,7 +106,7 @@ public class ConfigurationFacility {
   public static void setMaxRuleLength(int maxRuleLen) {
     ConfigurationParameterConfigurator.setMaxRuleLength(maxRuleLen);
   }
-  
+
   public static void setPositiveExamplesLimit(int limit) {
 	    ConfigurationParameterConfigurator.setPositiveExamplesLimit(limit);
   }

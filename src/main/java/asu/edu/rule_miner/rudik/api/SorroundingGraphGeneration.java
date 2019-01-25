@@ -10,6 +10,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import asu.edu.rule_miner.rudik.App;
 import org.apache.jena.ext.com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +20,7 @@ import asu.edu.rule_miner.rudik.sparql.SparqlExecutor;
 
 public class SorroundingGraphGeneration {
 
-  private final static Logger LOG = LoggerFactory.getLogger(RuleInstanceGeneration.class.getName());
+  private final static Logger LOG = App.getLogger(RuleInstanceGeneration.class.getName());
 
   private final SparqlExecutor executor;
   private final ScheduledExecutorService doubleThreadExecutor = Executors.newScheduledThreadPool(2);
